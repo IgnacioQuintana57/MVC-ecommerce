@@ -12,7 +12,7 @@ public class Test {
     @GetMapping("/test")
     public String getMethodName() {
         System.out.println("HOlas");
-        return new String("Hola Desde test");
+        return new String("Hola Desde");
     }
 
     
