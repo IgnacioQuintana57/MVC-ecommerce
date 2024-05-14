@@ -10,4 +10,6 @@ public interface ProductoService {
 
     ProductoDTO getProducto(String id);
 
+    Boolean insert(ProductoDTO pr);
+
 }
