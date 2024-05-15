@@ -1,13 +1,12 @@
 import ItemCount from "../ItemCount/ItemCount";
 import "./ItemDetail.css";
-import {cartContext} from '../../context/context';
-import {useContext} from 'react';
+import { cartContext } from "../../context/context";
+import { useContext } from "react";
 
 function ItemDetail(props) {
-  const {addItemCount} = useContext(cartContext);
+  const { addItemCount } = useContext(cartContext);
 
-  function onAdd (count){
-    console.log("agregaste,", count )
+  function onAdd(count) {
     const item = {
       id: props.id,
       title: props.title,
@@ -17,8 +16,8 @@ function ItemDetail(props) {
       ml: props.ml,
       stock: props.stock,
       count: count,
-    }
-    addItemCount(item)
+    };
+    addItemCount(item);
   }
 
   return (
