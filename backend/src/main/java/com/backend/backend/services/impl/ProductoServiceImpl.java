@@ -9,7 +9,9 @@ import java.util.concurrent.ExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.backend.backend.dto.CategoriaDTO;
 import com.backend.backend.dto.ProductoDTO;
+import com.backend.backend.dto.SubCategoriaDTO;
 import com.backend.backend.firebase.FirebaseInitializer;
 import com.backend.backend.services.ProductoService;
 import com.google.api.core.ApiFuture;
@@ -33,13 +35,11 @@ public class ProductoServiceImpl implements ProductoService {
         List<ProductoDTO> res = new ArrayList<>();
         ProductoDTO producto;
 
-        ApiFuture<QuerySnapshot> query = firebase.getFirestore().collection("categorias")
-                .document("ebsyNqxFVxTqeXKOlTvl").collection("subCategorias").document("OPMp6Zdtr1ynpwO7TQSN")
-                .collection("productos").get();
+        ApiFuture<QuerySnapshot> query = firebase.getFirestore().collection("productos").get();
         try {
             for (DocumentSnapshot doc : query.get().getDocuments()) {
                 producto = doc.toObject(ProductoDTO.class);
-                producto.setId(doc.getId());
+                producto.setIdProducto(doc.getId());
                 res.add(producto);
             }
             return res;
@@ -50,34 +50,61 @@ public class ProductoServiceImpl implements ProductoService {
     }
 
     @Override
-    public ProductoDTO getProducto(String id) {
-        CollectionReference productos = firebase.getFirestore().collection("productos");
-        // productos.list
-        return null;
+    public ProductoDTO get(String idProducto) {
+        DocumentReference productoRef = firebase.getFirestore().collection("productos").document(idProducto);
+        try {
+            DocumentSnapshot snap = productoRef.get().get();
+            if (snap.exists()) {
+                ProductoDTO prod = snap.toObject(ProductoDTO.class);
+                prod.setIdProducto(snap.getId());
+                return prod;
+            }
+            return null;
+        } catch (Exception e) {
+            // TODO: handle exception
+            return null;
+        }
     }
 
     @Override
-    public Boolean insert(ProductoDTO pr) {
-        CollectionReference productos = firebase.getFirestore().collection("productos");
+    public ProductoDTO insert(ProductoDTO pr) {
         Map<String, Object> docData = new HashMap<>();
         docData.put("descrip", pr.getDescrip());
         docData.put("precio", pr.getPrecio());
         docData.put("vigente", pr.isVigente());
         docData.put("conStock", pr.isConStock());
         docData.put("cantStock", pr.getCantStock());
-        docData.put("idCategoria", pr.getIdCategoria());
+        docData.put("idCategoria", pr.getIdSubCategoria());
+        docData.put("linkImagen", pr.getLinkImagen());
 
-        ApiFuture<WriteResult> writeResulteApiFuture = productos.document().create(docData);
-
+        CollectionReference productos = firebase.getFirestore().collection("productos");
+        DocumentReference docRef = productos.document();
+        ApiFuture<WriteResult> wrApi = docRef.set(docData);
         try {
-            if (null != writeResulteApiFuture.get()) {
-                System.out.println("Resultado insert:" + writeResulteApiFuture.get().toString());
-                return Boolean.TRUE;
+            if (null != wrApi.get()) {
+                return get(docRef.getId());
             }
-            return Boolean.FALSE;
+            return null;
         } catch (Exception e) {
-            return Boolean.FALSE;
+            return null;
         }
+    }
+
+    @Override
+    public List<ProductoDTO> insertMultiple(List<ProductoDTO> productos) {
+        List<ProductoDTO> res = new ArrayList<>();
+
+        for (ProductoDTO producto : productos) {
+            ProductoDTO tmp = insert(producto);
+            if (tmp != null) {
+                res.add(tmp);
+            } else {
+                // Manejar el caso donde la inserción falló, si es necesario
+                System.out.println("Failed to insert sub-category: " + producto);
+            }
+        }
+
+        return res;
     }
 
 }

@@ -26,9 +26,18 @@ public class CategoriasController {
         return new ResponseEntity<CategoriaDTO>(service.get(idCategoria), HttpStatus.OK);
     }
 
+    @GetMapping("/getAllCategoriasConSubCategorias")
+    public ResponseEntity getAllCategoriasConSubCategorias() {
+        return new ResponseEntity(service.getAllCategoriasConSubCategorias(), HttpStatus.OK);
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity list() {
+        return new ResponseEntity(service.list(), HttpStatus.OK);
+    }
+
     @PostMapping("/new")
     public ResponseEntity<CategoriaDTO> insert(@RequestBody CategoriaDTO cate) {
         return new ResponseEntity<CategoriaDTO>(service.insert(cate), HttpStatus.OK);
     }
-
 }
