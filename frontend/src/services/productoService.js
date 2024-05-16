@@ -1,6 +1,6 @@
 import axiosBackend from "../api/axiosConfig";
 
-export const getProductos = async () => {
+export const getListProductos = async () => {
     try {
       const response = await axiosBackend.get('/producto/list');
       return response.data;
