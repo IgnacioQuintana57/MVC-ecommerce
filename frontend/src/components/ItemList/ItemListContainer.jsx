@@ -63,6 +63,7 @@ import "./ItemListContainer.css";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import getProducts from "../../mockAPI/mockAPI";
+import { getProductos } from "../../services/productoService";
 
 function ItemListContainer(props) {
   const [productList, setProductList] = useState([]);
@@ -70,6 +71,10 @@ function ItemListContainer(props) {
 
   useEffect(() => {
     // Simulación de carga de productos desde un mock API
+    getProductos().then(data=> {
+      console.log('VBack'); 
+      console.log(data); 
+     }) 
     getProducts().then((productos) => {
       if (id) {
         // Si hay una categoría específica, filtra los productos por esa categoría

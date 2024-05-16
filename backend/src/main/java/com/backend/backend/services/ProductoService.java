@@ -8,6 +8,10 @@ public interface ProductoService {
 
     List<ProductoDTO> list();
 
-    ProductoDTO getProducto(String id);
+    ProductoDTO get(String idProducto);
+
+    ProductoDTO insert(ProductoDTO pr);
+
+    List<ProductoDTO> insertMultiple(List<ProductoDTO> productos);
 
 }
