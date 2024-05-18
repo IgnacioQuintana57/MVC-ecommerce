@@ -6,6 +6,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.backend.backend.dto.CategoriaDTO;
 import com.backend.backend.services.CategoriaService;
 
+import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,12 +18,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+@RequiredArgsConstructor
 @RestController()
 @RequestMapping("/categoria")
 public class CategoriasController {
 
-    @Autowired
-    private CategoriaService service;
+    private final CategoriaService service;
+
+    @GetMapping("/list")
+    public ResponseEntity<List<CategoriaDTO>> list() {
+        return new ResponseEntity<>(service.list(), HttpStatus.OK);
+    }
 
     @GetMapping("/{idCategoria}")
     public ResponseEntity<CategoriaDTO> get(@PathVariable(value = "idCategoria") String idCategoria) {
@@ -29,11 +38,6 @@ public class CategoriasController {
     @GetMapping("/getAllCategoriasConSubCategorias")
     public ResponseEntity getAllCategoriasConSubCategorias() {
         return new ResponseEntity(service.getAllCategoriasConSubCategorias(), HttpStatus.OK);
-    }
-
-    @GetMapping("/list")
-    public ResponseEntity list() {
-        return new ResponseEntity(service.list(), HttpStatus.OK);
     }
 
     @PostMapping("/new")

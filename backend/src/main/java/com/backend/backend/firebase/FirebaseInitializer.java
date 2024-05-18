@@ -1,6 +1,5 @@
 package com.backend.backend.firebase;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -20,7 +19,7 @@ public class FirebaseInitializer {
     @PostConstruct
     private void initFirebase() throws IOException {
         InputStream serviceAccount = getClass().getClassLoader().getResourceAsStream("firebaseApiKey.json");
-        FirebaseOptions options = new FirebaseOptions.Builder()
+        FirebaseOptions options = FirebaseOptions.builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                 .setDatabaseUrl("https://mvc-ecommerce-c56e5.firebaseio.com/")
                 .build();
