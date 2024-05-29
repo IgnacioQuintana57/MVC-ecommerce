@@ -33,6 +33,7 @@ public class CategoriaRepositoryImpl implements CategoriaRepository {
         try {
             for (DocumentSnapshot doc : query.get().getDocuments()) {
                 categoria = doc.toObject(CategoriaDTO.class);
+                assert categoria != null;
                 categoria.setIdCategoria(doc.getId());
                 res.add(categoria);
             }

@@ -4,66 +4,35 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.backend.backend.dto.CategoriaDTO;
 import com.backend.backend.dto.ProductoDTO;
-import com.backend.backend.dto.SubCategoriaDTO;
 import com.backend.backend.firebase.FirebaseInitializer;
 import com.backend.backend.services.ProductoService;
+import com.backend.backend.repositories.impl.ProductoRepositoryImpl;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.DocumentSnapshot;
-import com.google.cloud.firestore.Filter;
-import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.QuerySnapshot;
 import com.google.cloud.firestore.WriteResult;
-import com.google.firestore.v1.Document;
 
+@RequiredArgsConstructor
 @Service
 public class ProductoServiceImpl implements ProductoService {
 
-    @Autowired // Inyecta un servicio y permite administrar sus instancias
-    private FirebaseInitializer firebase; // Genera una unica instancia y no multiples
+    private final ProductoRepositoryImpl productoRepositoryImpl; //Unica instancia
 
     @Override
     public List<ProductoDTO> list() {
-        List<ProductoDTO> res = new ArrayList<>();
-        ProductoDTO producto;
-
-        ApiFuture<QuerySnapshot> query = firebase.getFirestore().collection("productos").get();
-        try {
-            for (DocumentSnapshot doc : query.get().getDocuments()) {
-                producto = doc.toObject(ProductoDTO.class);
-                producto.setIdProducto(doc.getId());
-                res.add(producto);
-            }
-            return res;
-        } catch (Exception e) {
-            return null;
-        }
-
+        return productoRepositoryImpl.list();
     }
 
     @Override
     public ProductoDTO get(String idProducto) {
-        DocumentReference productoRef = firebase.getFirestore().collection("productos").document(idProducto);
-        try {
-            DocumentSnapshot snap = productoRef.get().get();
-            if (snap.exists()) {
-                ProductoDTO prod = snap.toObject(ProductoDTO.class);
-                prod.setIdProducto(snap.getId());
-                return prod;
-            }
-            return null;
-        } catch (Exception e) {
-            // TODO: handle exception
-            return null;
-        }
+        return productoRepositoryImpl.get(idProducto);
     }
 
     @Override
@@ -76,18 +45,7 @@ public class ProductoServiceImpl implements ProductoService {
         docData.put("cantStock", pr.getCantStock());
         docData.put("idCategoria", pr.getIdSubCategoria());
         docData.put("linkImagen", pr.getLinkImagen());
-
-        CollectionReference productos = firebase.getFirestore().collection("productos");
-        DocumentReference docRef = productos.document();
-        ApiFuture<WriteResult> wrApi = docRef.set(docData);
-        try {
-            if (null != wrApi.get()) {
-                return get(docRef.getId());
-            }
-            return null;
-        } catch (Exception e) {
-            return null;
-        }
+        return  productoRepositoryImpl.insert(docData);
     }
 
     @Override
@@ -103,8 +61,6 @@ public class ProductoServiceImpl implements ProductoService {
                 System.out.println("Failed to insert sub-category: " + producto);
             }
         }
-
         return res;
     }
-
 }
