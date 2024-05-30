@@ -5,25 +5,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.backend.backend.dto.FiltroProductosDTO;
 import com.backend.backend.dto.ProductoDTO;
-import com.backend.backend.firebase.FirebaseInitializer;
-import com.backend.backend.services.ProductoService;
 import com.backend.backend.repositories.impl.ProductoRepositoryImpl;
-import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.CollectionReference;
-import com.google.cloud.firestore.DocumentReference;
-import com.google.cloud.firestore.DocumentSnapshot;
-import com.google.cloud.firestore.WriteResult;
+import com.backend.backend.services.ProductoService;
+
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Service
 public class ProductoServiceImpl implements ProductoService {
 
-    private final ProductoRepositoryImpl productoRepositoryImpl; //Unica instancia
+    private final ProductoRepositoryImpl productoRepositoryImpl; // Unica instancia
 
     @Override
     public List<ProductoDTO> list() {
@@ -45,7 +40,7 @@ public class ProductoServiceImpl implements ProductoService {
         docData.put("cantStock", pr.getCantStock());
         docData.put("idCategoria", pr.getIdSubCategoria());
         docData.put("linkImagen", pr.getLinkImagen());
-        return  productoRepositoryImpl.insert(docData);
+        return productoRepositoryImpl.insert(docData);
     }
 
     @Override
@@ -62,5 +57,11 @@ public class ProductoServiceImpl implements ProductoService {
             }
         }
         return res;
+    }
+
+    @Override
+    public List<ProductoDTO> getProductosPorFiltro(FiltroProductosDTO filtro) {
+        // TODO Auto-generated method stub
+        return productoRepositoryImpl.getProductosPorFiltro(filtro);
     }
 }

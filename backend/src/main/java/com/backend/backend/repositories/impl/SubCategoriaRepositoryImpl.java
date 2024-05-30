@@ -66,7 +66,7 @@ public class SubCategoriaRepositoryImpl implements SubCategoriaRepository {
             for (DocumentSnapshot doc : query.get().getDocuments()) {
                 tmp = doc.toObject(SubCategoriaDTO.class);
                 if (tmp != null) {
-                    tmp.setIdCategoria(doc.getId());
+                    tmp.setIdSubCategoria(doc.getId());
                     res.add(tmp);
                 } else {
                     System.err.println("Una subCategoria vino null");

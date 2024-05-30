@@ -19,7 +19,7 @@ public class BackendApplication {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/**")
-						.allowedOrigins("http://localhost:3000") // Cambia "*" por los orígenes específicos si es
+						.allowedOrigins("http://localhost:5173") // Cambia "*" por los orígenes específicos si es
 						.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
 						.allowedHeaders("")
 						.allowCredentials(true);

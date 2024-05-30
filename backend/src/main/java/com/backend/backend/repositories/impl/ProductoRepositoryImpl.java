@@ -1,21 +1,27 @@
 package com.backend.backend.repositories.impl;
 
-import com.backend.backend.dto.ProductoDTO;
-import com.backend.backend.firebase.FirebaseInitializer;
-import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.*;
-import org.springframework.stereotype.Repository;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Repository;
+
+import com.backend.backend.dto.FiltroProductosDTO;
+import com.backend.backend.dto.ProductoDTO;
+import com.backend.backend.firebase.FirebaseInitializer;
+import com.backend.backend.repositories.ProductoRepository;
+import com.google.api.core.ApiFuture;
+import com.google.cloud.firestore.CollectionReference;
+import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.firestore.DocumentSnapshot;
+import com.google.cloud.firestore.Query;
+import com.google.cloud.firestore.QuerySnapshot;
+import com.google.cloud.firestore.WriteResult;
 
 @Repository
-public class ProductoRepositoryImpl {
+public class ProductoRepositoryImpl implements ProductoRepository {
 
-    private final CollectionReference productosReference;   //Para que se cree solo una instancia
+    private final CollectionReference productosReference; // Para que se cree solo una instancia
 
     public ProductoRepositoryImpl(FirebaseInitializer firebaseInitializer) {
         this.productosReference = firebaseInitializer.getFirestore().collection("productos");
@@ -41,7 +47,7 @@ public class ProductoRepositoryImpl {
 
     public ProductoDTO get(String idProducto) {
         DocumentReference productoRef = productosReference.document(idProducto);
-        try{
+        try {
             DocumentSnapshot snap = productoRef.get().get();
             if (snap.exists()) {
                 ProductoDTO prod = snap.toObject(ProductoDTO.class);
@@ -56,7 +62,7 @@ public class ProductoRepositoryImpl {
         }
     }
 
-    public ProductoDTO insert(Map<String,Object> pr) {
+    public ProductoDTO insert(Map<String, Object> pr) {
         DocumentReference docRef = productosReference.document();
         ApiFuture<WriteResult> wrApi = docRef.set(pr);
         try {
@@ -67,5 +73,35 @@ public class ProductoRepositoryImpl {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    @Override
+    public List<ProductoDTO> getProductosPorFiltro(FiltroProductosDTO filtro) {
+        System.out.println("HOLA??" + filtro);
+        Query query = productosReference.whereEqualTo("vigente", true);
+        List<ProductoDTO> ret = new ArrayList<>();
+        ProductoDTO tmp;
+        if (filtro.getIdCategoria() != null) {
+            query = query.whereEqualTo("idCategoria", filtro.getIdSubCategoria());
+        }
+        // if (filtro.getIdSubCategoria() != null) {
+        // query = query.whereEqualTo("idSubCategoria", filtro.getIdSubCategoria());
+        // }
+        // if (filtro.getDescrip() != null) {
+        // query = query.whereEqualTo("descrip", filtro.getDescrip());
+        // }
+        try {
+            QuerySnapshot querySnap = query.get().get();
+            for (DocumentSnapshot doc : querySnap) {
+                tmp = doc.toObject(ProductoDTO.class);
+                tmp.setIdProducto(doc.getId());
+                ret.add(tmp);
+            }
+            return ret;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
     }
 }

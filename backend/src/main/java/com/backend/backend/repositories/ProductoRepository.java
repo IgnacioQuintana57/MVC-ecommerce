@@ -1,20 +1,19 @@
-package com.backend.backend.services;
+package com.backend.backend.repositories;
 
 import java.util.List;
+import java.util.Map;
 
 import com.backend.backend.dto.FiltroProductosDTO;
 import com.backend.backend.dto.ProductoDTO;
 
-public interface ProductoService {
-
-    List<ProductoDTO> list();
+public interface ProductoRepository {
 
     ProductoDTO get(String idProducto);
 
-    ProductoDTO insert(ProductoDTO pr);
+    List<ProductoDTO> list();
 
     List<ProductoDTO> getProductosPorFiltro(FiltroProductosDTO filtro);
 
-    List<ProductoDTO> insertMultiple(List<ProductoDTO> productos);
+    ProductoDTO insert(Map<String, Object> producto);
 
 }
