@@ -38,8 +38,10 @@ public class ProductoServiceImpl implements ProductoService {
         docData.put("vigente", pr.isVigente());
         docData.put("conStock", pr.isConStock());
         docData.put("cantStock", pr.getCantStock());
-        docData.put("idCategoria", pr.getIdSubCategoria());
+        docData.put("idSubCategoria", pr.getIdSubCategoria());
+        docData.put("idCategoria", pr.getIdCategoria());
         docData.put("linkImagen", pr.getLinkImagen());
+        docData.put("destacado", pr.getDestacado());
         return productoRepositoryImpl.insert(docData);
     }
 

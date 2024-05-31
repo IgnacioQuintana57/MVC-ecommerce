@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,8 +36,8 @@ public class ProductoController {
             @RequestParam(name = "descrip", required = false) String descrip) {
         FiltroProductosDTO filtro = new FiltroProductosDTO();
         filtro.setDescrip("");
-        filtro.setIdCategoria(idCategoria);
-        filtro.setIdSubCategoria(idSubCategoria);
+        filtro.setIdCategoria(idCategoria.length() == 20 ? idCategoria : null);
+        filtro.setIdSubCategoria(idSubCategoria.length() == 20 ? idSubCategoria : null);
         return new ResponseEntity<List<ProductoDTO>>(service.getProductosPorFiltro(filtro), HttpStatus.OK);
     }
 
@@ -51,7 +52,7 @@ public class ProductoController {
     }
 
     @PostMapping("/newMultiple")
-    public ResponseEntity<List<ProductoDTO>> insertMultiple(@RequestBody List<ProductoDTO> pr) {
+    public ResponseEntity<List<ProductoDTO>> insertMultiple(@Validated @RequestBody List<ProductoDTO> pr) {
         return new ResponseEntity<List<ProductoDTO>>(service.insertMultiple(pr), HttpStatus.OK);
     }
 

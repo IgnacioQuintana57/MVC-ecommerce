@@ -77,16 +77,20 @@ public class ProductoRepositoryImpl implements ProductoRepository {
 
     @Override
     public List<ProductoDTO> getProductosPorFiltro(FiltroProductosDTO filtro) {
-        System.out.println("HOLA??" + filtro);
         Query query = productosReference.whereEqualTo("vigente", true);
         List<ProductoDTO> ret = new ArrayList<>();
+        System.out.println("HOLA??" + filtro);
         ProductoDTO tmp;
         if (filtro.getIdCategoria() != null) {
-            query = query.whereEqualTo("idCategoria", filtro.getIdSubCategoria());
+            query = query.whereEqualTo("idCategoria", filtro.getIdCategoria());
         }
-        // if (filtro.getIdSubCategoria() != null) {
-        // query = query.whereEqualTo("idSubCategoria", filtro.getIdSubCategoria());
-        // }
+        if (filtro.getIdSubCategoria() != null) {
+            query = query.whereEqualTo("idSubCategoria", filtro.getIdSubCategoria());
+        }
+
+        if (filtro.getIdSubCategoria() == null && filtro.getIdCategoria() == null) {
+            query = query.whereEqualTo("destacado", Boolean.TRUE);
+        }
         // if (filtro.getDescrip() != null) {
         // query = query.whereEqualTo("descrip", filtro.getDescrip());
         // }

@@ -11,5 +11,7 @@ public class ProductoDTO {
     private boolean conStock;
     private int cantStock;
     private String idSubCategoria;
+    private String idCategoria;
     private String linkImagen;
+    private Boolean destacado;
 }
