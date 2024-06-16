@@ -4,23 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.backend.backend.dto.CategoriaDTO;
 import com.backend.backend.dto.SubCategoriaDTO;
-import com.backend.backend.firebase.FirebaseInitializer;
 import com.backend.backend.repositories.SubCategoriaRepository;
 import com.backend.backend.services.SubCategoriaService;
-import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.CollectionReference;
-import com.google.cloud.firestore.DocumentReference;
-import com.google.cloud.firestore.DocumentSnapshot;
-import com.google.cloud.firestore.Query;
-import com.google.cloud.firestore.QuerySnapshot;
-import com.google.cloud.firestore.WriteResult;
 
 import lombok.RequiredArgsConstructor;
 
