@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.backend.backend.dto.FiltroProductosDTO;
 import com.backend.backend.dto.ProductoDTO;
+import com.backend.backend.error.NotFoundException;
 import com.backend.backend.repositories.impl.ProductoRepositoryImpl;
 import com.backend.backend.services.ProductoService;
 
@@ -26,8 +27,13 @@ public class ProductoServiceImpl implements ProductoService {
     }
 
     @Override
-    public ProductoDTO get(String idProducto) {
-        return productoRepositoryImpl.get(idProducto);
+    public ProductoDTO get(String idProducto) throws NotFoundException {
+        ProductoDTO ret = productoRepositoryImpl.get(idProducto);
+        if (ret != null)
+            return ret;
+        else
+            throw new NotFoundException("No se encontro el producto solicitado");
+
     }
 
     @Override

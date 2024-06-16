@@ -18,7 +18,7 @@ public class BackendApplication {
 			System.setProperty(entry.getKey(), entry.getValue());
 		});
 		SpringApplication.run(BackendApplication.class, args);
-
+		System.err.println("Backend iniciado!");
 	}
 
 	@Bean
@@ -33,5 +33,6 @@ public class BackendApplication {
 						.allowCredentials(true);
 			}
 		};
+
 	}
 }

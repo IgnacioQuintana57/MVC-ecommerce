@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.backend.dto.CategoriaDTO;
+import com.backend.backend.error.BadReqException;
+import com.backend.backend.error.NotFoundException;
 import com.backend.backend.services.ApiKeyValidationService;
 import com.backend.backend.services.CategoriaService;
 
@@ -32,7 +34,11 @@ public class CategoriasController {
     }
 
     @GetMapping("/{idCategoria}")
-    public ResponseEntity<CategoriaDTO> get(@PathVariable(value = "idCategoria") String idCategoria) {
+    public ResponseEntity<CategoriaDTO> get(@PathVariable(value = "idCategoria") String idCategoria)
+            throws BadReqException, NotFoundException {
+        if (!(idCategoria instanceof String) || idCategoria.length() != 20) {
+            throw new BadReqException("Parametros erroneos.");
+        }
         return new ResponseEntity<CategoriaDTO>(service.get(idCategoria), HttpStatus.OK);
     }
 

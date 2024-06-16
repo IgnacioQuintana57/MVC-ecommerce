@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.backend.dto.FiltroProductosDTO;
 import com.backend.backend.dto.ProductoDTO;
+import com.backend.backend.error.NotFoundException;
 import com.backend.backend.services.ApiKeyValidationService;
 import com.backend.backend.services.ProductoService;
 
@@ -30,7 +31,8 @@ public class ProductoController {
     private ApiKeyValidationService apiKey;
 
     @GetMapping("/{idProducto}")
-    public ResponseEntity<ProductoDTO> get(@PathVariable(value = "idProducto") String idProducto) {
+    public ResponseEntity<ProductoDTO> get(@PathVariable(value = "idProducto") String idProducto)
+            throws NotFoundException {
         return new ResponseEntity<ProductoDTO>(service.get(idProducto), HttpStatus.OK);
     }
 
