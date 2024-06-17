@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.backend.backend.dto.FiltroProductosDTO;
 import com.backend.backend.dto.ProductoDTO;
+import com.backend.backend.error.BadReqException;
 import com.backend.backend.error.NotFoundException;
 import com.backend.backend.repositories.impl.ProductoRepositoryImpl;
 import com.backend.backend.services.ProductoService;
@@ -37,7 +38,30 @@ public class ProductoServiceImpl implements ProductoService {
     }
 
     @Override
-    public ProductoDTO insert(ProductoDTO pr) {
+    public ProductoDTO insert(ProductoDTO pr) throws BadReqException {
+
+        if ((pr.getDescrip() == null)) {
+            throw new BadReqException("No hay descripción");
+        }
+        if ((pr.getPrecio() == null)) {
+            throw new BadReqException("No hay precio");
+        }
+        if ((pr.getCantStock() == 0)) {
+            throw new BadReqException("No hay stock");
+        }
+        if ((pr.getIdSubCategoria() == null) || pr.getIdSubCategoria().length() != 20) {
+            throw new BadReqException("No hay subcategoría");
+        }
+        if ((pr.getIdCategoria() == null) || pr.getIdCategoria().length() != 20) {
+            throw new BadReqException("No hay categoría");
+        }
+        if ((pr.getLinkImagen() == null)) {
+            throw new BadReqException("No hay imagen");
+        }
+        if ((pr.getDestacado() == null)) {
+            throw new BadReqException("No se informó el estado de destacado");
+        }
+
         Map<String, Object> docData = new HashMap<>();
         docData.put("descrip", pr.getDescrip());
         docData.put("precio", pr.getPrecio());
@@ -52,7 +76,7 @@ public class ProductoServiceImpl implements ProductoService {
     }
 
     @Override
-    public List<ProductoDTO> insertMultiple(List<ProductoDTO> productos) {
+    public List<ProductoDTO> insertMultiple(List<ProductoDTO> productos) throws BadReqException {
         List<ProductoDTO> res = new ArrayList<>();
 
         for (ProductoDTO producto : productos) {
@@ -68,8 +92,12 @@ public class ProductoServiceImpl implements ProductoService {
     }
 
     @Override
-    public List<ProductoDTO> getProductosPorFiltro(FiltroProductosDTO filtro) {
+    public List<ProductoDTO> getProductosPorFiltro(FiltroProductosDTO filtro) throws NotFoundException {
         // TODO Auto-generated method stub
-        return productoRepositoryImpl.getProductosPorFiltro(filtro);
+        List<ProductoDTO> ret = productoRepositoryImpl.getProductosPorFiltro(filtro);
+        if (ret.isEmpty() || ret == null) {
+            throw new NotFoundException("No se encontraron productos con los filtros seleccionados.");
+        }
+        return ret;
     }
 }

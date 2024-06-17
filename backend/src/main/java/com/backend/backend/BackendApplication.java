@@ -13,7 +13,7 @@ public class BackendApplication {
 
 	public static void main(String[] args) {
 
-		Dotenv dotenv = Dotenv.configure().directory("src/main/resources/.env").load();
+		Dotenv dotenv = Dotenv.configure().directory("src/main/resources").load();
 		dotenv.entries().forEach(entry -> {
 			System.setProperty(entry.getKey(), entry.getValue());
 		});

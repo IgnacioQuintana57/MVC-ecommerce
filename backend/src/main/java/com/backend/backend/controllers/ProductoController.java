@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.backend.dto.FiltroProductosDTO;
 import com.backend.backend.dto.ProductoDTO;
+import com.backend.backend.error.BadReqException;
 import com.backend.backend.error.NotFoundException;
+import com.backend.backend.error.UnauthorizedException;
 import com.backend.backend.services.ApiKeyValidationService;
 import com.backend.backend.services.ProductoService;
 
@@ -40,7 +42,8 @@ public class ProductoController {
     public ResponseEntity<List<ProductoDTO>> getProductosPorFiltro(
             @RequestParam(name = "idCategoria", required = false) String idCategoria,
             @RequestParam(name = "idSubCategoria", required = false) String idSubCategoria,
-            @RequestParam(name = "descrip", required = false) String descrip) {
+            @RequestParam(name = "descrip", required = false) String descrip) throws NotFoundException {
+
         FiltroProductosDTO filtro = new FiltroProductosDTO();
         filtro.setDescrip("");
         filtro.setIdCategoria(idCategoria.length() == 20 ? idCategoria : null);
@@ -55,18 +58,41 @@ public class ProductoController {
 
     @PostMapping("/new")
     public ResponseEntity<ProductoDTO> insert(@RequestBody ProductoDTO pr,
-            @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader)
+            throws BadReqException, NotFoundException, UnauthorizedException {
         if (!apiKey.isValidApiKeyInsert(authorizationHeader)) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            throw new UnauthorizedException();
+        }
+        if ((pr.getDescrip() == null)) {
+            throw new BadReqException("No hay descripción");
+        }
+        if ((pr.getPrecio() == null)) {
+            throw new BadReqException("No hay precio");
+        }
+        if ((pr.getCantStock() == 0)) {
+            throw new BadReqException("No hay stock");
+        }
+        if ((pr.getIdSubCategoria() == null) || pr.getIdSubCategoria().length() != 20) {
+            throw new BadReqException("No hay subcategoría");
+        }
+        if ((pr.getIdCategoria() == null) || pr.getIdCategoria().length() != 20) {
+            throw new BadReqException("No hay categoría");
+        }
+        if ((pr.getLinkImagen() == null)) {
+            throw new BadReqException("No hay imagen");
+        }
+        if ((pr.getDestacado() == null)) {
+            throw new BadReqException("No se informó el estado de destacado");
         }
         return new ResponseEntity<ProductoDTO>(service.insert(pr), HttpStatus.OK);
     }
 
     @PostMapping("/newMultiple")
     public ResponseEntity<List<ProductoDTO>> insertMultiple(@Validated @RequestBody List<ProductoDTO> pr,
-            @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader)
+            throws UnauthorizedException, BadReqException {
         if (!apiKey.isValidApiKeyInsert(authorizationHeader)) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            throw new UnauthorizedException();
         }
         return new ResponseEntity<List<ProductoDTO>>(service.insertMultiple(pr), HttpStatus.OK);
     }

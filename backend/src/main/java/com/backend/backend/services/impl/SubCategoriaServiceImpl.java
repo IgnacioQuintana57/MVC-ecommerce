@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.backend.backend.dto.SubCategoriaDTO;
+import com.backend.backend.error.NotFoundException;
 import com.backend.backend.repositories.SubCategoriaRepository;
 import com.backend.backend.services.SubCategoriaService;
 
@@ -20,8 +21,12 @@ public class SubCategoriaServiceImpl implements SubCategoriaService {
     private final SubCategoriaRepository subCategoriaRepository;
 
     @Override
-    public SubCategoriaDTO get(String idSubCategoria) {
-        return subCategoriaRepository.get(idSubCategoria);
+    public SubCategoriaDTO get(String idSubCategoria) throws NotFoundException {
+        SubCategoriaDTO ret = subCategoriaRepository.get(idSubCategoria);
+        if (ret == null) {
+            throw new NotFoundException("No se encontro la subcategoria seleccionada");
+        }
+        return ret;
     }
 
     @Override
@@ -39,8 +44,13 @@ public class SubCategoriaServiceImpl implements SubCategoriaService {
     }
 
     @Override
-    public List<SubCategoriaDTO> list() {
-        return subCategoriaRepository.list();
+    public List<SubCategoriaDTO> list() throws NotFoundException {
+        List<SubCategoriaDTO> ret = subCategoriaRepository.list();
+        if (ret == null || ret.isEmpty()) {
+            throw new NotFoundException("No se encontraron subcategorias");
+        }
+        return ret;
+
     }
 
     @Override
@@ -53,7 +63,7 @@ public class SubCategoriaServiceImpl implements SubCategoriaService {
             if (insertedSubCategoria != null) {
                 insertedSubCategorias.add(insertedSubCategoria);
             } else {
-                System.out.println("Error al insertar la sub cateogira");
+                System.out.println("Error al insertar la subcategoria");
             }
         }
 
@@ -61,8 +71,12 @@ public class SubCategoriaServiceImpl implements SubCategoriaService {
     }
 
     @Override
-    public List<SubCategoriaDTO> getPorIdCategoria(String idCategoria) {
-        return subCategoriaRepository.getPorIdCategoria(idCategoria);
+    public List<SubCategoriaDTO> getPorIdCategoria(String idCategoria) throws NotFoundException {
+        List<SubCategoriaDTO> ret = subCategoriaRepository.getPorIdCategoria(idCategoria);
+        if (ret == null || ret.isEmpty()) {
+            throw new NotFoundException("No se encontraron subcategorias");
+        }
+        return ret;
     }
 
 }

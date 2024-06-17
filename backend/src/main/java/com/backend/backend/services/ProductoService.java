@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.backend.backend.dto.FiltroProductosDTO;
 import com.backend.backend.dto.ProductoDTO;
+import com.backend.backend.error.BadReqException;
 import com.backend.backend.error.NotFoundException;
 
 public interface ProductoService {
@@ -12,10 +13,10 @@ public interface ProductoService {
 
     ProductoDTO get(String idProducto) throws NotFoundException;
 
-    ProductoDTO insert(ProductoDTO pr);
+    ProductoDTO insert(ProductoDTO pr) throws BadReqException;
 
-    List<ProductoDTO> getProductosPorFiltro(FiltroProductosDTO filtro);
+    List<ProductoDTO> getProductosPorFiltro(FiltroProductosDTO filtro) throws NotFoundException;
 
-    List<ProductoDTO> insertMultiple(List<ProductoDTO> productos);
+    List<ProductoDTO> insertMultiple(List<ProductoDTO> productos) throws BadReqException;
 
 }

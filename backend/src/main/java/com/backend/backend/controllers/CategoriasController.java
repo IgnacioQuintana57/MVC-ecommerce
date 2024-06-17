@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.backend.backend.dto.CategoriaDTO;
 import com.backend.backend.error.BadReqException;
 import com.backend.backend.error.NotFoundException;
+import com.backend.backend.error.UnauthorizedException;
 import com.backend.backend.services.ApiKeyValidationService;
 import com.backend.backend.services.CategoriaService;
 
@@ -29,29 +30,27 @@ public class CategoriasController {
     private ApiKeyValidationService apiKey;
 
     @GetMapping("/list")
-    public ResponseEntity<List<CategoriaDTO>> list() {
+    public ResponseEntity<List<CategoriaDTO>> list() throws NotFoundException {
         return new ResponseEntity<>(service.list(), HttpStatus.OK);
     }
 
     @GetMapping("/{idCategoria}")
     public ResponseEntity<CategoriaDTO> get(@PathVariable(value = "idCategoria") String idCategoria)
             throws BadReqException, NotFoundException {
-        if (!(idCategoria instanceof String) || idCategoria.length() != 20) {
-            throw new BadReqException("Parametros erroneos.");
-        }
         return new ResponseEntity<CategoriaDTO>(service.get(idCategoria), HttpStatus.OK);
     }
 
     @GetMapping("/getAllCategoriasConSubCategorias")
-    public ResponseEntity getAllCategoriasConSubCategorias() {
+    public ResponseEntity getAllCategoriasConSubCategorias() throws NotFoundException {
         return new ResponseEntity(service.getAllCategoriasConSubCategorias(), HttpStatus.OK);
     }
 
     @PostMapping("/new")
     public ResponseEntity<CategoriaDTO> insert(@RequestBody CategoriaDTO cate,
-            @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader)
+            throws BadReqException, NotFoundException, UnauthorizedException {
         if (!apiKey.isValidApiKeyInsert(authorizationHeader)) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            throw new UnauthorizedException();
         }
         return new ResponseEntity<CategoriaDTO>(service.insert(cate), HttpStatus.OK);
     }
