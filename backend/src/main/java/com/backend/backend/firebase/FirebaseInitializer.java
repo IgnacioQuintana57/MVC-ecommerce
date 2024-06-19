@@ -22,13 +22,13 @@ public class FirebaseInitializer {
     private void initFirebase() throws IOException {
         InputStream serviceAccount;
         String credentialsPath = System.getenv("GOOGLE_APPLICATION_CREDENTIALS");
-
+        System.out.println("HOLAAAAAAAAAAAAAAAAAAAAAAA");
         if (credentialsPath != null) {
             serviceAccount = Files.newInputStream(Paths.get(credentialsPath));
         } else {
             serviceAccount = getClass().getClassLoader().getResourceAsStream("firebaseApiKey.json");
         }
-
+        System.out.println(serviceAccount);
         FirebaseOptions options = FirebaseOptions.builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                 .setDatabaseUrl("https://mvc-ecommerce-c56e5.firebaseio.com/")
