@@ -14,6 +14,9 @@ import com.backend.backend.error.NotFoundException;
 import com.backend.backend.repositories.CategoriaRepository;
 import com.backend.backend.services.CategoriaService;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 @Service
 public class CategoriaServiceImpl implements CategoriaService {
 
