@@ -23,7 +23,6 @@ public class FirebaseInitializer {
 
     @PostConstruct
     private void initFirebase() throws IOException {
-        System.out.println(credentialsJson);
         if (credentialsJson == null || credentialsJson.isEmpty()) {
             throw new IllegalStateException("GOOGLE_APPLICATION_CREDENTIALS environment variable is not set.");
         }
