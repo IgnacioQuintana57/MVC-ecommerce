@@ -36,18 +36,16 @@ jobs:
     - name: Set up Firebase credentials
       env:
         GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.FIREBASE_CREDENTIALS}}
-        API_KEY_INSERT: "vaEJVy6u7FNrWReKUoNxJDKMSRJpmJPoHAHZJVnbSgMPQtbUCM5wcTfi8ik7xK5nsK2WPo5ifFaF7dtNPSWszjufAfB8rntg4unyWtomwbFs8bRW828drBgVP2VkHZw9"
-
+      run: |
+        example-command "$GOOGLE_APPLICATION_CREDENTIALS"
     - name: Build with Gradle
       run: ./gradlew build
       working-directory: backend
       env:
         GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.FIREBASE_CREDENTIALS}}
-        API_KEY_INSERT: "vaEJVy6u7FNrWReKUoNxJDKMSRJpmJPoHAHZJVnbSgMPQtbUCM5wcTfi8ik7xK5nsK2WPo5ifFaF7dtNPSWszjufAfB8rntg4unyWtomwbFs8bRW828drBgVP2VkHZw9"
 
     - name: Run tests with Gradle
       run: ./gradlew test
       working-directory: backend
       env:
         GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.FIREBASE_CREDENTIALS}}
-        API_KEY_INSERT: "vaEJVy6u7FNrWReKUoNxJDKMSRJpmJPoHAHZJVnbSgMPQtbUCM5wcTfi8ik7xK5nsK2WPo5ifFaF7dtNPSWszjufAfB8rntg4unyWtomwbFs8bRW828drBgVP2VkHZw9"
