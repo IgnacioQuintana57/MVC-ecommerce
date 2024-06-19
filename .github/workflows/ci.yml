@@ -36,8 +36,6 @@ jobs:
     - name: Set up Firebase credentials
       env:
         GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.FIREBASE_CREDENTIALS}}
-      run: |
-        printenv GOOGLE_APPLICATION_CREDENTIALS
 
     - name: Build with Gradle
       run: ./gradlew build
