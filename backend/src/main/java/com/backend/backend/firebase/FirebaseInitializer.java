@@ -1,10 +1,10 @@
 package com.backend.backend.firebase;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.google.auth.oauth2.GoogleCredentials;
@@ -18,17 +18,18 @@ import jakarta.annotation.PostConstruct;
 @Service // Se inicia apenas arranca el proyecto
 public class FirebaseInitializer {
 
+    @Value("${GOOGLE_APPLICATION_CREDENTIALS}")
+    private String credentialsJson;
+
     @PostConstruct
     private void initFirebase() throws IOException {
-        InputStream serviceAccount;
-        String credentialsPath = System.getenv("GOOGLE_APPLICATION_CREDENTIALS");
-        System.out.println("HOLAAAAAAAAAAAAAAAAAAAAAAA");
-        if (credentialsPath != null) {
-            serviceAccount = Files.newInputStream(Paths.get(credentialsPath));
-        } else {
-            serviceAccount = getClass().getClassLoader().getResourceAsStream("firebaseApiKey.json");
+        System.out.println(credentialsJson);
+        if (credentialsJson == null || credentialsJson.isEmpty()) {
+            throw new IllegalStateException("GOOGLE_APPLICATION_CREDENTIALS environment variable is not set.");
         }
-        System.out.println(serviceAccount);
+
+        InputStream serviceAccount = new ByteArrayInputStream(credentialsJson.getBytes());
+
         FirebaseOptions options = FirebaseOptions.builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                 .setDatabaseUrl("https://mvc-ecommerce-c56e5.firebaseio.com/")
