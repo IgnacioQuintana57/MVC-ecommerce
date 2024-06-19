@@ -66,7 +66,7 @@ public class ProductoController {
             throw new UnauthorizedException();
         }
         if ((pr.getDescrip() == null)) {
-            throw new BadReqException("No hay descripción");
+            throw new BadReqException("No hay descripción.");
         }
         if ((pr.getPrecio() == null)) {
             throw new BadReqException("No hay precio");
