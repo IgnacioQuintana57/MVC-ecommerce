@@ -37,7 +37,8 @@ jobs:
       env:
         GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.FIREBASE_CREDENTIALS}}
       run: |
-        example-command "$GOOGLE_APPLICATION_CREDENTIALS"
+        printenv GOOGLE_APPLICATION_CREDENTIALS
+
     - name: Build with Gradle
       run: ./gradlew build
       working-directory: backend
