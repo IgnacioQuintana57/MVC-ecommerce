@@ -65,7 +65,7 @@ public class ProductoController {
         if (!apiKey.isValidApiKeyInsert(authorizationHeader)) {
             throw new UnauthorizedException();
         }
-        if ((pr.getDescrip() == null)) {
+        if ((pr.getDescrip() != null)) {
             throw new BadReqException("No hay descripción.");
         }
         if ((pr.getPrecio() == null)) {
