@@ -2,6 +2,8 @@ package com.backend.backend.firebase;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import org.springframework.stereotype.Service;
 
@@ -18,7 +20,15 @@ public class FirebaseInitializer {
 
     @PostConstruct
     private void initFirebase() throws IOException {
-        InputStream serviceAccount = getClass().getClassLoader().getResourceAsStream("firebaseApiKey.json");
+        InputStream serviceAccount;
+        String credentialsPath = System.getenv("GOOGLE_APPLICATION_CREDENTIALS");
+
+        if (credentialsPath != null) {
+            serviceAccount = Files.newInputStream(Paths.get(credentialsPath));
+        } else {
+            serviceAccount = getClass().getClassLoader().getResourceAsStream("firebaseApiKey.json");
+        }
+
         FirebaseOptions options = FirebaseOptions.builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                 .setDatabaseUrl("https://mvc-ecommerce-c56e5.firebaseio.com/")
