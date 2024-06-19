@@ -54,7 +54,7 @@ public class ProductoServiceTest {
     @Test
     void testGetThrowBadRequest() throws Exception {
         assertThrows(BadReqException.class, () -> {
-            productoService.get("12345678912345678912");
+            productoService.get("shortId");
         });
         assertThrows(BadReqException.class, () -> {
             productoService.get("123456789123456789122222");
