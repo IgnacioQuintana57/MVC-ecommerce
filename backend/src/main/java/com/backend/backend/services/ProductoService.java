@@ -9,13 +9,13 @@ import com.backend.backend.error.NotFoundException;
 
 public interface ProductoService {
 
-    List<ProductoDTO> list();
+    List<ProductoDTO> list() throws NotFoundException;
 
-    ProductoDTO get(String idProducto) throws NotFoundException;
+    ProductoDTO get(String idProducto) throws NotFoundException, BadReqException;
 
     ProductoDTO insert(ProductoDTO pr) throws BadReqException;
 
-    List<ProductoDTO> getProductosPorFiltro(FiltroProductosDTO filtro) throws NotFoundException;
+    List<ProductoDTO> getProductosPorFiltro(FiltroProductosDTO filtro) throws NotFoundException, BadReqException;
 
     List<ProductoDTO> insertMultiple(List<ProductoDTO> productos) throws BadReqException;
 

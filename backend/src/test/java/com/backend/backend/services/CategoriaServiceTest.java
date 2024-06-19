@@ -4,6 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -73,14 +76,38 @@ public class CategoriaServiceTest {
     }
 
     @Test
-    void testGetAllCategoriasConSubCategorias() {
+    void testInsertThrowsBadRequest() throws Exception {
+        CategoriaDTO tmp = new CategoriaDTO();
+        tmp.setCodigo("test");
+        tmp.setDescrip("test");
+        tmp.setVigente(null);
+        // SIN VIGENCIA
+        assertThrows(BadReqException.class, () -> {
+            categoriaService.insert(tmp);
+        });
+        tmp.setVigente(true);
+        tmp.setCodigo(null);
+        assertThrows(BadReqException.class, () -> {
+            categoriaService.insert(tmp);
+        });
+        tmp.setDescrip(null);
+        tmp.setCodigo("test");
+        assertThrows(BadReqException.class, () -> {
+            categoriaService.insert(tmp);
+        });
     }
 
     @Test
-    void testInsert() {
-    }
+    void testListThrowsNotFound() throws Exception {
+        List<CategoriaDTO> res = new ArrayList<>();
+        when(categoriaRepository.list()).thenReturn(null);
+        assertThrows(NotFoundException.class, () -> {
+            categoriaService.list();
+        });
+        when(categoriaRepository.list()).thenReturn(res);
+        assertThrows(NotFoundException.class, () -> {
+            categoriaService.list();
+        });
 
-    @Test
-    void testList() {
     }
 }

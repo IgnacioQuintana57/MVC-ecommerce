@@ -5,13 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.backend.backend.dto.FiltroProductosDTO;
 import com.backend.backend.dto.ProductoDTO;
 import com.backend.backend.error.BadReqException;
 import com.backend.backend.error.NotFoundException;
-import com.backend.backend.repositories.impl.ProductoRepositoryImpl;
+import com.backend.backend.repositories.ProductoRepository;
 import com.backend.backend.services.ProductoService;
 
 import lombok.RequiredArgsConstructor;
@@ -20,15 +21,21 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class ProductoServiceImpl implements ProductoService {
 
-    private final ProductoRepositoryImpl productoRepositoryImpl; // Unica instancia
+    @Autowired
+    private ProductoRepository productoRepositoryImpl; // Unica instancia
 
     @Override
-    public List<ProductoDTO> list() {
-        return productoRepositoryImpl.list();
+    public List<ProductoDTO> list() throws NotFoundException {
+        List<ProductoDTO> ret = productoRepositoryImpl.list();
+        if (ret == null || ret.isEmpty())
+            throw new NotFoundException("No se encontraron productos");
+        return ret;
     }
 
     @Override
-    public ProductoDTO get(String idProducto) throws NotFoundException {
+    public ProductoDTO get(String idProducto) throws NotFoundException, BadReqException {
+        if (idProducto == null || idProducto.length() != 20)
+            throw new BadReqException("idProducto incorrecto");
         ProductoDTO ret = productoRepositoryImpl.get(idProducto);
         if (ret != null)
             return ret;

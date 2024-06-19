@@ -34,7 +34,7 @@ public class ProductoController {
 
     @GetMapping("/{idProducto}")
     public ResponseEntity<ProductoDTO> get(@PathVariable(value = "idProducto") String idProducto)
-            throws NotFoundException {
+            throws NotFoundException, BadReqException {
         return new ResponseEntity<ProductoDTO>(service.get(idProducto), HttpStatus.OK);
     }
 
@@ -42,7 +42,8 @@ public class ProductoController {
     public ResponseEntity<List<ProductoDTO>> getProductosPorFiltro(
             @RequestParam(name = "idCategoria", required = false) String idCategoria,
             @RequestParam(name = "idSubCategoria", required = false) String idSubCategoria,
-            @RequestParam(name = "descrip", required = false) String descrip) throws NotFoundException {
+            @RequestParam(name = "descrip", required = false) String descrip)
+            throws NotFoundException, BadReqException {
 
         FiltroProductosDTO filtro = new FiltroProductosDTO();
         filtro.setDescrip("");
@@ -52,7 +53,7 @@ public class ProductoController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<ProductoDTO>> list() {
+    public ResponseEntity<List<ProductoDTO>> list() throws NotFoundException {
         return new ResponseEntity<List<ProductoDTO>>(service.list(), HttpStatus.OK);
     }
 
