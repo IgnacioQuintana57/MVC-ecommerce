@@ -49,7 +49,6 @@ public class ProductoController {
         filtro.setDescrip(descrip);
         filtro.setIdCategoria(idCategoria.length() == 20 ? idCategoria : null);
         filtro.setIdSubCategoria(idSubCategoria.length() == 20 ? idSubCategoria : null);
-        System.out.println(filtro);
         return new ResponseEntity<List<ProductoDTO>>(service.getProductosPorFiltro(filtro), HttpStatus.OK);
     }
 
@@ -65,8 +64,8 @@ public class ProductoController {
         if (!apiKey.isValidApiKeyInsert(authorizationHeader)) {
             throw new UnauthorizedException();
         }
-        if ((pr.getDescrip() == null)) {
-            throw new BadReqException("No hay descripción");
+        if ((pr.getDescrip() != null)) {
+            throw new BadReqException("No hay descripción.");
         }
         if ((pr.getPrecio() == null)) {
             throw new BadReqException("No hay precio");

@@ -101,10 +101,10 @@ public class ProductoServiceImpl implements ProductoService {
     @Override
     public List<ProductoDTO> getProductosPorFiltro(FiltroProductosDTO filtro)
             throws NotFoundException, BadReqException {
-        if (filtro.getIdCategoria().length() != 20) {
+        if (filtro.getIdCategoria() != null && filtro.getIdCategoria().length() != 20) {
             throw new BadReqException("Categoria incorrecta");
         }
-        if (filtro.getIdSubCategoria().length() != 20) {
+        if (filtro.getIdSubCategoria() != null && filtro.getIdSubCategoria().length() != 20) {
             throw new BadReqException("SubCategoria incorrecta");
         }
         List<ProductoDTO> ret = productoRepositoryImpl.getProductosPorFiltro(filtro);
