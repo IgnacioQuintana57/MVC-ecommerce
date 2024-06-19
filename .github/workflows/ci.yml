@@ -34,12 +34,16 @@ jobs:
       run: chmod +x backend/gradlew
 
     - name: Set up Firebase credentials
-      run: echo "${{ secrets.FIREBASE_CREDENTIALS }}" > $HOME/serviceAccountKey.json
+      run: echo "${{ secrets.FIREBASE_CREDENTIALS }}" > $HOME/firebaseApiKey.json
 
     - name: Build with Gradle
       run: ./gradlew build
       working-directory: backend
+      env:
+        GOOGLE_APPLICATION_CREDENTIALS: $HOME/firebaseApiKey.json
 
     - name: Run tests with Gradle
       run: ./gradlew test
       working-directory: backend
+      env:
+        GOOGLE_APPLICATION_CREDENTIALS: $HOME/firebaseApiKey.json
