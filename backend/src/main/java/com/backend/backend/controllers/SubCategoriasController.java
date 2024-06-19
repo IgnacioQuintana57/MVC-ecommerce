@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.backend.dto.SubCategoriaDTO;
+import com.backend.backend.error.BadReqException;
 import com.backend.backend.error.NotFoundException;
 import com.backend.backend.services.ApiKeyValidationService;
 import com.backend.backend.services.SubCategoriaService;
@@ -34,13 +35,13 @@ public class SubCategoriasController {
 
     @GetMapping("/{idSubCategoria}")
     public ResponseEntity<SubCategoriaDTO> get(@PathVariable(value = "idSubCategoria") String idSubCategoria)
-            throws NotFoundException {
+            throws NotFoundException, BadReqException {
         return new ResponseEntity<SubCategoriaDTO>(service.get(idSubCategoria), HttpStatus.OK);
     }
 
     @GetMapping("/getPorIdCategoria/{idCategoria}")
     public ResponseEntity<List<SubCategoriaDTO>> getPorIdCategoria(
-            @PathVariable(value = "idCategoria") String idCategoria) throws NotFoundException {
+            @PathVariable(value = "idCategoria") String idCategoria) throws NotFoundException, BadReqException {
         return new ResponseEntity<List<SubCategoriaDTO>>(service.getPorIdCategoria(idCategoria), HttpStatus.OK);
     }
 

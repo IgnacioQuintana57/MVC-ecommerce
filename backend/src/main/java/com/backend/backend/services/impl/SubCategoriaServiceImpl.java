@@ -5,9 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.management.BadAttributeValueExpException;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.backend.backend.dto.SubCategoriaDTO;
+import com.backend.backend.error.BadReqException;
 import com.backend.backend.error.NotFoundException;
 import com.backend.backend.repositories.SubCategoriaRepository;
 import com.backend.backend.services.SubCategoriaService;
@@ -18,10 +22,16 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class SubCategoriaServiceImpl implements SubCategoriaService {
 
-    private final SubCategoriaRepository subCategoriaRepository;
+    @Autowired
+    private SubCategoriaRepository subCategoriaRepository;
 
     @Override
-    public SubCategoriaDTO get(String idSubCategoria) throws NotFoundException {
+    public SubCategoriaDTO get(String idSubCategoria) throws NotFoundException, BadReqException {
+
+        if (idSubCategoria == null || idSubCategoria.length() != 20) {
+            throw new BadReqException("El id proporcionado no es correcto");
+        }
+
         SubCategoriaDTO ret = subCategoriaRepository.get(idSubCategoria);
         if (ret == null) {
             throw new NotFoundException("No se encontro la subcategoria seleccionada");
@@ -71,7 +81,12 @@ public class SubCategoriaServiceImpl implements SubCategoriaService {
     }
 
     @Override
-    public List<SubCategoriaDTO> getPorIdCategoria(String idCategoria) throws NotFoundException {
+    public List<SubCategoriaDTO> getPorIdCategoria(String idCategoria) throws NotFoundException, BadReqException {
+
+        if (idCategoria == null || idCategoria.length() != 20) {
+            throw new BadReqException("El id proporcionado no es correcto");
+        }
+
         List<SubCategoriaDTO> ret = subCategoriaRepository.getPorIdCategoria(idCategoria);
         if (ret == null || ret.isEmpty()) {
             throw new NotFoundException("No se encontraron subcategorias");
