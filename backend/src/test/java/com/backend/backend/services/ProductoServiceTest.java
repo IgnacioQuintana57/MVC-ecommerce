@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.backend.backend.dto.FiltroProductosDTO;
 import com.backend.backend.dto.ProductoDTO;
 import com.backend.backend.error.BadReqException;
 import com.backend.backend.error.NotFoundException;
@@ -56,7 +57,7 @@ public class ProductoServiceTest {
             productoService.get("shortId");
         });
         assertThrows(BadReqException.class, () -> {
-            productoService.get("longId123123123123123");
+            productoService.get("123456789123456789122222");
         });
         assertThrows(BadReqException.class, () -> {
             productoService.get(null);
@@ -79,17 +80,89 @@ public class ProductoServiceTest {
     }
 
     @Test
-    void testGetProductosPorFiltro() {
+    void testGetProductosPorFiltroThrowsBadReqException() {
+        FiltroProductosDTO filtro = new FiltroProductosDTO();
+        filtro.setDescrip("test");
+        filtro.setIdCategoria("shortId");
+        filtro.setIdSubCategoria("12345678912345678912");
+        assertThrows(BadReqException.class, () -> {
+            productoService.getProductosPorFiltro(filtro);
+        });
+        filtro.setIdCategoria("longId123123123123123");
+        assertThrows(BadReqException.class, () -> {
+            productoService.getProductosPorFiltro(filtro);
+        });
+        filtro.setIdCategoria("12345678912345678912");
+        filtro.setIdSubCategoria("shortId");
+        assertThrows(BadReqException.class, () -> {
+            productoService.getProductosPorFiltro(filtro);
+        });
+        filtro.setIdSubCategoria("longId123123123123123");
+        assertThrows(BadReqException.class, () -> {
+            productoService.getProductosPorFiltro(filtro);
+        });
 
     }
 
     @Test
-    void testInsert() {
+    void testGetProductosPorFiltroThrowsNotFoundException() {
+        FiltroProductosDTO filtro = new FiltroProductosDTO();
+        filtro.setDescrip("test");
+        filtro.setIdCategoria("12345678912345678912");
+        filtro.setIdSubCategoria("12345678912345678912");
 
+        when(productoRepository.getProductosPorFiltro(filtro)).thenReturn(new ArrayList<>());
+        assertThrows(NotFoundException.class, () -> {
+            productoService.getProductosPorFiltro(filtro);
+        });
+
+        when(productoRepository.getProductosPorFiltro(filtro)).thenReturn(null);
+        assertThrows(NotFoundException.class, () -> {
+            productoService.getProductosPorFiltro(filtro);
+        });
     }
 
     @Test
-    void testInsertMultiple() {
+    void testInsertThrowsBadReqException() {
+        producto.setDescrip(null);
+        assertThrows(BadReqException.class, () -> {
+            productoService.insert(producto);
+        });
+
+        producto.setPrecio(null);
+        assertThrows(BadReqException.class, () -> {
+            productoService.insert(producto);
+        });
+
+        producto.setIdSubCategoria(null);
+        producto.setPrecio(100F);
+        assertThrows(BadReqException.class, () -> {
+            productoService.insert(producto);
+        });
+
+        producto.setIdCategoria(null);
+        producto.setIdSubCategoria("12345678912345678912");
+        assertThrows(BadReqException.class, () -> {
+            productoService.insert(producto);
+        });
+
+        producto.setLinkImagen(null);
+        producto.setIdCategoria("12345678912345678912");
+        assertThrows(BadReqException.class, () -> {
+            productoService.insert(producto);
+        });
+
+        producto.setDestacado(null);
+        producto.setLinkImagen("test");
+        assertThrows(BadReqException.class, () -> {
+            productoService.insert(producto);
+        });
+
+        producto.setCantStock(0);
+        producto.setDestacado(Boolean.TRUE);
+        assertThrows(BadReqException.class, () -> {
+            productoService.insert(producto);
+        });
 
     }
 

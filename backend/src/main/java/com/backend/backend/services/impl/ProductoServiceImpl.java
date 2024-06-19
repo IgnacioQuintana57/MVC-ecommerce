@@ -99,10 +99,16 @@ public class ProductoServiceImpl implements ProductoService {
     }
 
     @Override
-    public List<ProductoDTO> getProductosPorFiltro(FiltroProductosDTO filtro) throws NotFoundException {
-        // TODO Auto-generated method stub
+    public List<ProductoDTO> getProductosPorFiltro(FiltroProductosDTO filtro)
+            throws NotFoundException, BadReqException {
+        if (filtro.getIdCategoria().length() != 20) {
+            throw new BadReqException("Categoria incorrecta");
+        }
+        if (filtro.getIdSubCategoria().length() != 20) {
+            throw new BadReqException("SubCategoria incorrecta");
+        }
         List<ProductoDTO> ret = productoRepositoryImpl.getProductosPorFiltro(filtro);
-        if (ret.isEmpty() || ret == null) {
+        if (ret == null || ret.isEmpty()) {
             throw new NotFoundException("No se encontraron productos con los filtros seleccionados.");
         }
         return ret;

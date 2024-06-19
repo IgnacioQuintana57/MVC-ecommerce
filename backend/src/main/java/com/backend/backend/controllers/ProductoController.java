@@ -46,9 +46,10 @@ public class ProductoController {
             throws NotFoundException, BadReqException {
 
         FiltroProductosDTO filtro = new FiltroProductosDTO();
-        filtro.setDescrip("");
+        filtro.setDescrip(descrip);
         filtro.setIdCategoria(idCategoria.length() == 20 ? idCategoria : null);
         filtro.setIdSubCategoria(idSubCategoria.length() == 20 ? idSubCategoria : null);
+        System.out.println(filtro);
         return new ResponseEntity<List<ProductoDTO>>(service.getProductosPorFiltro(filtro), HttpStatus.OK);
     }
 

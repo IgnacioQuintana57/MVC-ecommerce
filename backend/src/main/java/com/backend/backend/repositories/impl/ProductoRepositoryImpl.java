@@ -86,8 +86,8 @@ public class ProductoRepositoryImpl implements ProductoRepository {
         if (filtro.getIdSubCategoria() != null) {
             query = query.whereEqualTo("idSubCategoria", filtro.getIdSubCategoria());
         }
-
-        if (filtro.getIdSubCategoria() == null && filtro.getIdCategoria() == null) {
+        if (filtro.getIdSubCategoria() == null && filtro.getIdCategoria() == null && (filtro.getDescrip() == null
+                || filtro.getDescrip().length() == 0)) {
             query = query.whereEqualTo("destacado", Boolean.TRUE);
         }
 
@@ -96,7 +96,12 @@ public class ProductoRepositoryImpl implements ProductoRepository {
             for (DocumentSnapshot doc : querySnap) {
                 tmp = doc.toObject(ProductoDTO.class);
                 tmp.setIdProducto(doc.getId());
-                ret.add(tmp);
+                if (filtro.getDescrip() != null && filtro.getDescrip().length() != 0) {
+                    if (tmp.getDescrip().toLowerCase().contains(filtro.getDescrip().toLowerCase())) {
+                        ret.add(tmp);
+                    }
+                } else
+                    ret.add(tmp);
             }
             return ret;
         } catch (Exception e) {
